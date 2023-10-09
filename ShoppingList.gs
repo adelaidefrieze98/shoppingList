@@ -5,7 +5,8 @@ function shoppingList() {
   var list = ss.getSheetByName('ShoppingList');
 
   var range = meals.getRange('E2:E24').getValues(); //getting checked values
-  //var rangeList = list.getRange(1,1,1,2).getValues();
+
+  var servings = meals.getRange(12,9,1,1).getValues(); //extracting servings value
 
   //adding ingredients to shopping list
   var ingredList = [];
@@ -23,86 +24,35 @@ function shoppingList() {
     }
   }
 
-//declaring variables for duplicate discovery
-var duplicateList = [[]];//declaring array to contain duplicates
-var preDupLength = ingredList.length; //extracting length of shopping list BEFORE duplicates
-var uniqueList = [];//declaring shopping list array without duplicates
-var multipleDup = false;//multiple duplicates presence variable 
-for (var q = 0; q < preDupLength-1; q++){
-  multipleDup = false;
-  for (var m = 0; m < preDupLength-1; m++){
-    if (q != m){
-      var checkIngred1 = ingredList[q][0];
-      var checkIngred2 = ingredList[m][0];
-      var checkMeasure1 = ingredList[q][2];
-      var checkMeasure2 = ingredList[m][2];
+//declaring map to eliminate duplicates
+var uniqueMap = new Map();
 
-      for (var d = 0; d < duplicateList.length; d++){
-        if (checkIngred1 == duplicateList[d][0] && checkMeasure1 == duplicateList[d][1]){
-          //duplicateList.splice(d,1);
-          multipleDup = true;
-        };
-      }
-      
-      if (checkIngred1 == checkIngred2 && multipleDup == false && checkMeasure1 == checkMeasure2){//checking if duplicate present
-        duplicateList.push([checkIngred1,checkMeasure1]);
-      }
-      if (checkIngred1 == checkIngred2 && multipleDup == false && checkMeasure1 != checkMeasure2){
-        duplicateList.push([checkIngred1, checkMeasure1]);
-      }
-    }
+for (var q = 0; q < ingredList.length; q++) {
+  var name = ingredList[q][0];
+  var quantity = ingredList[q][1]*servings;//multiplying by servings
+  var measurement = ingredList[q][2];
+  var key = name + '&' + measurement; //declaring key to determine uniqueness of ingredient
+  if(uniqueMap.has(key)){//if the ingredient already exists
+    uniqueMap.set(key,uniqueMap.get(key) + quantity);
+  } else {
+    uniqueMap.set(key, quantity);
   }
 }
 
-var multipleDup2 = false;
-
-for (var w = 0; w < duplicateList.length; w++){
-  multipleDup2 = false;
-  for (var e = 0; e < preDupLength-1; e++){
-    if (duplicateList[w][0] == ingredList[e][0] && duplicateList[w][1] == ingredList[e][2]){
-      var quan = ingredList[e][1];
-      if (multipleDup2 == false){ 
-        uniqueList.push([ingredList[e][0], quan, ingredList[e][2]]);
-        multipleDup2 = true;
-      }
-      else {
-        var sumQuan = 0;
-        for (var a = 0; a < uniqueList.length; a++){
-          if (uniqueList[a][0] == ingredList[e][0] && uniqueList[a][2] == ingredList[e][2]){
-            var quan2 = uniqueList[a][1];
-            sumQuan = quan + quan2;
-            uniqueList.splice(a,1);
-            uniqueList.push([ingredList[e][0], sumQuan, ingredList[e][2]]);
-          } 
-        }
-      }
-      }
-    }
-  }
-
-//adding other ingredients
-var dup = false;
-for (var z = 0; z < ingredList.length-1; z++) {
-  dup = false;
-  for (var p = 0; p < duplicateList.length; p++){
-    if (ingredList[z][0] == duplicateList[p][0]){
-      dup = true;
-    }
-  }
-  if (dup == false){
-    uniqueList.push(ingredList[z]);
-  }
+//turning back into array
+var uniqueList = [];
+for (var [key, quantity] of uniqueMap) {
+  var nameMeasurement = key.split("&");
+  var name = nameMeasurement[0];
+  var measurement = nameMeasurement[1];
+  uniqueList.push([name,quantity,measurement]);
 }
 
+//sorting into alphabetical order
 uniqueList.sort();
-var postDupLength = uniqueList.length;
 
-//servings
-var servings = meals.getRange(12,9,1,1).getValues(); //extracting servings value
-for (var q = 0; q < postDupLength; q++){ //looping through quantities
-  uniqueList[q][1] = uniqueList[q][1]*servings;
-}
-list.deleteRows(2,preDupLength);//clearning list of ingredients
+//assigning ingredients to Shopping List sheet
+list.deleteRows(2,preDupLength);//clearing list of ingredients
 list.getRange('D2:D').insertCheckboxes();
 list.getRange(2,1,postDupLength,3).setValues(uniqueList);
 }
