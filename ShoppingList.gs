@@ -6,7 +6,7 @@ function shoppingList() {
 
   var range = meals.getRange('E2:E24').getValues(); //getting checked values
 
-  var servings = meals.getRange(12,9,1,1).getValues(); //extracting servings value
+  var servings = meals.getRange('H1').getValues(); //extracting servings value
 
   //adding ingredients to shopping list
   var ingredList = [];
