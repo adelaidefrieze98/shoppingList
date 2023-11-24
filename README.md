@@ -10,6 +10,7 @@ selecting desired recipies:
 
 recipies have corresponding spreadsheets with ingredients:
 ![image](https://github.com/adelaidefrieze98/shoppingList/assets/78547429/d9c87b3e-2f2b-4ef7-9d70-d7fc0f0955d1)
+
 ingredients for Banana Zucchini Muffin:
 ![image](https://github.com/adelaidefrieze98/shoppingList/assets/78547429/f4f9c087-1ac2-4cce-90f7-bddc91de2897)
 
