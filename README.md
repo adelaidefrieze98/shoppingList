@@ -19,7 +19,7 @@ ingredients for Banana Zucchini Muffin:
 ##
 upon clearing previous list, and clicking on 'Make Shopping List' Button, a new shopping list is created with ingredients summed up:
 ##
-![image](https://github.com/adelaidefrieze98/shoppingList/assets/78547429/60b0690b-2c7b-4e88-93bd-eb37edde1399)
+![image](https://github.com/adelaidefrieze98/shoppingList/assets/78547429/8a41cca2-196b-4631-acdd-d09d76ef932a)
 
 # potential successive stages:
 1. options of how to organise ingredients, alphabetically or according to section in the supermarket (querying library/training machine learning model to identify ingredient class)
